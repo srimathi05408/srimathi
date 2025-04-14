@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login or Register | MyNotes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Login or Register</h2>
+
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+
+    <p class="error" id="error-msg"></p>
+
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button>
+  </div>
+
+  <script>
+    // Get users from localStorage or set empty
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+    function login() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const error = document.getElementById("error-msg");
+
+      if (!users[email]) {
+        error.textContent = "No account found with this email.";
+      } else if (users[email].password !== password) {
+        error.textContent = "Incorrect password.";
+      } else {
+        localStorage.setItem("loggedIn", email);
+        window.location.href = "notes.html";
+      }
+    }
+
+    function register() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const error = document.getElementById("error-msg");
+
+      if (users[email]) {
+        error.textContent = "This email is already registered.";
+      } else if (email === "" || password === "") {
+        error.textContent = "Email and password are required.";
+      } else {
+        users[email] = { password, notes: "" };
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("loggedIn", email);
+        window.location.href = "notes.html";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Notes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>
+      My Notes
+      <button class="logout" onclick="logout()">Logout</button>
+    </h2>
+
+    <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
+    <button onclick="saveNote()">💾 Save</button>
+    <p class="saved-msg" id="saved-msg"></p>
+  </div>
+
+  <script>
+    const currentUser = localStorage.getItem("loggedIn");
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+    const notesArea = document.getElementById("notesArea");
+    const savedMsg = document.getElementById("saved-msg");
+
+    if (!currentUser || !users[currentUser]) {
+      window.location.href = "index.html";
+    }
+
+    // Load user's note
+    notesArea.value = users[currentUser].notes || "";
+
+    function saveNote() {
+      users[currentUser].notes = notesArea.value;
+      localStorage.setItem("users", JSON.stringify(users));
+      savedMsg.textContent = "✔️ Note saved!";
+      setTimeout(() => savedMsg.textContent = "", 2000);
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
